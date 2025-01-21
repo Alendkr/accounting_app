@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="20.0"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.diplom.accounting_app.RegisterController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Label text="Введите данные, чтобы зарегистрироватся" />
+
+    <TextField fx:id="usernameField" promptText="Имя" />
+
+    <TextField fx:id="loginField" promptText="Логин" />
+
+    <PasswordField fx:id="passwordField" promptText="Пароль" />
+
+    <Button onAction="#onRegisterButtonClick" text="Зарегистрироваться" />
+    <Button onAction="#onBackButtonClick" text="Назад" />
+</VBox>
