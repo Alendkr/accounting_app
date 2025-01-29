@@ -13,4 +13,7 @@ module org.diplom.accounting_app {
 
     opens org.diplom.accounting_app to javafx.fxml;
     exports org.diplom.accounting_app;
+    exports org.diplom.accounting_app.controllers;
+    opens org.diplom.accounting_app.controllers to javafx.fxml;
+    opens org.diplom.accounting_app.models to javafx.base;
 }
