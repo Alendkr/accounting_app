@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class MainApplication extends Application {
+
 
     private static Stage primaryStage; // Переменная для хранения основного окна приложения
 

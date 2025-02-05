@@ -10,6 +10,10 @@ module org.diplom.accounting_app {
     requires eu.hansolo.tilesfx;
     requires java.sql;
     requires java.desktop;
+    requires jakarta.persistence.api;
+    requires io.ebean.datasource;
+    requires io.ebean.api;
+    requires io.ebean;
 
     opens org.diplom.accounting_app to javafx.fxml;
     exports org.diplom.accounting_app;

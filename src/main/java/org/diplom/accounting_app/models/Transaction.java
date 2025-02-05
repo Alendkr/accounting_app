@@ -1,7 +1,10 @@
 package org.diplom.accounting_app.models;
 
+import jakarta.persistence.Entity;
 import java.time.LocalDate;
 
+
+@Entity
 public class Transaction {
     private int id;
     private int userId;
