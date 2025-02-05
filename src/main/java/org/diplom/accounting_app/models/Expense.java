@@ -1,28 +1,69 @@
 package org.diplom.accounting_app.models;
 
+import io.ebean.Model;
+import io.ebean.annotation.NotNull;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDate;
 
-//@Entity
-//@Table(name = "Expenses")
-//@Getter
-//@Setter
-//@AllArgsConstructor
-public class Expense {
+@Entity
+@Table(name = "Expenses")
+public class Expense extends Model {
 
-//    @Id
-//    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    private String description;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "UserID")
+    private User user;
+
+    private String descr;
+
+    @NotNull
     private int amount;
-    private String date;
 
-//    @ManyToOne(optional = false)
-//    User user;
+    @NotNull
+    private LocalDate expenseDate;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getDescription() {
+        return descr;
+    }
+
+    public void setDescription(String description) {
+        this.descr = description;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public LocalDate getExpenseDate() {
+        return expenseDate;
+    }
+
+    public void setExpenseDate(LocalDate expenseDate) {
+        this.expenseDate = expenseDate;
+    }
 }

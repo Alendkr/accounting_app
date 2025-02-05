@@ -6,6 +6,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.diplom.accounting_app.MainApplication;
 import org.diplom.accounting_app.dao.UserDAO;
+import org.diplom.accounting_app.models.CurrentUser;
+import org.diplom.accounting_app.models.User;
 
 import java.io.IOException;
 
@@ -19,11 +21,15 @@ public class LoginController {
 
     @FXML
     protected void onLoginButtonClick() throws IOException {
-        String username = usernameField.getText();
+        String login = usernameField.getText();
         String password = passwordField.getText();
 
-        if (UserDAO.isValidCredentials(username, password)) {
-            System.out.println("Успешный вход!");
+        User user = UserDAO.findUserByLoginAndPassword(login, password);
+
+        if (user != null) {
+            CurrentUser.setCurrentUser(user);  // Сохраняем пользователя
+            System.out.println("Успешный вход! Пользователь: " + user.getName());
+
             MainApplication.setRoot("menu-view", "Главное меню");
         } else {
             showAlert("Ошибка авторизации", "Указаны неверный логин или пароль");

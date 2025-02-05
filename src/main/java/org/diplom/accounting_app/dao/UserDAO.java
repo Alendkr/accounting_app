@@ -5,13 +5,16 @@ import org.diplom.accounting_app.models.User;
 
 public class UserDAO {
 
-    public static boolean isValidCredentials(String login, String password) {
-        User user = DB.find(User.class)
+    public static User findUserByLoginAndPassword(String login, String password) {
+        return DB.find(User.class)
                 .where()
                 .eq("login", login)
                 .eq("password", password)
                 .findOne();
-        return user != null;
+    }
+
+    public static boolean isValidCredentials(String login, String password) {
+        return findUserByLoginAndPassword(login, password) != null;
     }
 
     public static boolean registerUser(String username, String login, String password, Integer money) {

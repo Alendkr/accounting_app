@@ -1,6 +1,6 @@
 package org.diplom.accounting_app.controllers;
 
-import jakarta.persistence.Id;
+import io.ebean.DB;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,41 +15,34 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.diplom.accounting_app.database.DatabaseConnection;
+import org.diplom.accounting_app.models.CurrentUser;
 import org.diplom.accounting_app.models.Expense;
-import org.diplom.accounting_app.models.Transaction;
+import org.diplom.accounting_app.models.Receipt;
+import org.diplom.accounting_app.models.User;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-
-import io.ebean.DB;
-import org.diplom.accounting_app.database.DatabaseConnection;
-import org.diplom.accounting_app.config.EbeanDatabaseConfig;
+import java.util.List;
 
 public class MenuController {
     @FXML
-    private TableView<Transaction> expensesTable;
+    private TableView<Expense> expensesTable;
     @FXML
-    private TableView<Transaction> receiptsTable;
+    private TableView<Receipt> receiptsTable;
     @FXML
-    private TableColumn<Transaction, Integer> expenseAmountColumn;
+    private TableColumn<Expense, Integer> expenseAmountColumn;
     @FXML
-    private TableColumn<Transaction, String> expenseDateColumn;
+    private TableColumn<Expense, String> expenseDateColumn;
     @FXML
-    private TableColumn<Transaction, Integer> receiptAmountColumn;
+    private TableColumn<Receipt, Integer> receiptAmountColumn;
     @FXML
-    private TableColumn<Transaction, String> receiptDateColumn;
+    private TableColumn<Receipt, String> receiptDateColumn;
     @FXML
     private PieChart financeChart;
     @FXML
     private Button addButton;
 
-    private final ObservableList<Transaction> expenses = FXCollections.observableArrayList();
-    private final ObservableList<Transaction> receipts = FXCollections.observableArrayList();
+    private final ObservableList<Expense> expenses = FXCollections.observableArrayList();
+    private final ObservableList<Receipt> receipts = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -60,64 +53,68 @@ public class MenuController {
 
     private void setupTableColumns() {
         expenseAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        expenseDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        expenseDateColumn.setCellValueFactory(new PropertyValueFactory<>("expenseDate"));
         receiptAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        receiptDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        receiptDateColumn.setCellValueFactory(new PropertyValueFactory<>("receiptDate"));
 
         expensesTable.setItems(expenses);
         receiptsTable.setItems(receipts);
     }
 
     public void loadTransactions() {
-        expenses.clear();
-        receipts.clear();
-
-        try (Connection conn = DatabaseConnection.connect()) {
-            if (conn != null) {
-                loadDataFromDB(conn, "Expenses", expenses);
-                loadDataFromDB(conn, "Receipts", receipts);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadDataFromDB(Connection conn, String tableName, ObservableList<Transaction> list) throws SQLException {
-        String query;
-        boolean isExpense;
-
-        if (tableName.equals("Expenses")) {
-            query = "SELECT ID, UserID, Amount, expense_date, Descr FROM Expenses";
-            isExpense = true;
-        } else { // "Receipts"
-            query = "SELECT ID, UserID, Amount, receipt_date, Descr FROM Receipts";
-            isExpense = false;
+        if (CurrentUser.getCurrentUser() == null) {
+            System.out.println("Ошибка: Текущий пользователь не найден.");
+            return;
         }
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                list.add(new Transaction(
-                        rs.getInt("ID"),
-                        rs.getInt("UserID"),
-                        rs.getInt("Amount"),
-                        LocalDate.parse(rs.getString(isExpense ? "expense_date" : "receipt_date")),
-                        rs.getString("Descr"),
-                        isExpense
-                ));
-            }
-        }
+        int userId = CurrentUser.getCurrentUser().getId();
+
+        // Загружаем расходы
+        List<Expense> expenses = DB.find(Expense.class)
+                .where()
+                .eq("user.id", userId)
+                .findList();
+
+        // Загружаем доходы
+        List<Receipt> receipts = DB.find(Receipt.class)
+                .where()
+                .eq("user.id", userId)
+                .findList();
+
+        expensesTable.getItems().setAll(expenses);
+        receiptsTable.getItems().setAll(receipts);
     }
 
 
     public void updatePieChart() {
-        int totalExpenses = expenses.stream().mapToInt(Transaction::getAmount).sum();
-        int totalReceipts = receipts.stream().mapToInt(Transaction::getAmount).sum();
+        if (CurrentUser.getCurrentUser() == null) {
+            System.out.println("Ошибка: Текущий пользователь не найден.");
+            return;
+        }
 
-        financeChart.setData(FXCollections.observableArrayList(
-                new PieChart.Data("Расходы", totalExpenses),
-                new PieChart.Data("Доходы", totalReceipts)
-        ));
+        int userId = CurrentUser.getCurrentUser().getId();
+
+        // Получаем сумму всех расходов
+        int totalExpenses = DB.find(Expense.class)
+                .where()
+                .eq("user.id", userId)
+                .findList()
+                .stream()
+                .mapToInt(Expense::getAmount)
+                .sum();
+
+        // Получаем сумму всех доходов
+        int totalReceipts = DB.find(Receipt.class)
+                .where()
+                .eq("user.id", userId)
+                .findList()
+                .stream()
+                .mapToInt(Receipt::getAmount)
+                .sum();
+
+        financeChart.getData().clear();
+        financeChart.getData().add(new PieChart.Data("Доходы", totalReceipts));
+        financeChart.getData().add(new PieChart.Data("Расходы", totalExpenses));
     }
 
     @FXML

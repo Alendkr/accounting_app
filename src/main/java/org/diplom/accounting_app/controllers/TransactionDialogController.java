@@ -3,10 +3,11 @@ package org.diplom.accounting_app.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.diplom.accounting_app.database.DatabaseConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import org.diplom.accounting_app.models.CurrentUser;
+import org.diplom.accounting_app.models.Expense;
+import org.diplom.accounting_app.models.Receipt;
+import org.diplom.accounting_app.models.User;
+
 import java.time.LocalDate;
 
 public class TransactionDialogController {
@@ -57,23 +58,32 @@ public class TransactionDialogController {
             return;
         }
 
-        boolean isExpense = type.equals("Расход");
-        String table = isExpense ? "Expenses" : "Receipts";
-        String dateColumn = isExpense ? "expense_date" : "receipt_date";
+        User currentUser = CurrentUser.getCurrentUser();
+        if (currentUser == null) {
+            showAlert("Ошибка", "Не удалось определить пользователя!");
+            return;
+        }
 
-        try (Connection conn = DatabaseConnection.connect()) {
-            if (conn != null) {
-                String query = "INSERT INTO " + table + " (UserID, Amount, " + dateColumn + ", Descr) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                    stmt.setInt(1, 1); // Пока ID пользователя = 1 (заменить на актуальный)
-                    stmt.setInt(2, amount);
-                    stmt.setString(3, date.toString());
-                    stmt.setString(4, description);
-                    stmt.executeUpdate();
-                }
+        try {
+            if (type.equals("Расход")) {
+                Expense expense = new Expense();
+                expense.setUser(currentUser);
+                expense.setAmount(amount);
+                expense.setExpenseDate(date);
+                expense.setDescription(description);
+                expense.save();
+            } else {
+                Receipt receipt = new Receipt();
+                receipt.setUser(currentUser);
+                receipt.setAmount(amount);
+                receipt.setReceiptDate(date);
+                receipt.setDescription(description);
+                receipt.save();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            showAlert("Ошибка", "Не удалось сохранить данные!");
+            return;
         }
 
         menuController.loadTransactions(); // Обновляем таблицы
@@ -94,4 +104,3 @@ public class TransactionDialogController {
         alert.showAndWait();
     }
 }
-

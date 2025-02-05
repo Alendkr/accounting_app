@@ -28,6 +28,8 @@ public class EbeanDatabaseConfig {
         // Add your entity packages here
         config.setDefaultServer(true);
         config.addClass(org.diplom.accounting_app.models.User.class);
+        config.addClass(org.diplom.accounting_app.models.Expense.class);
+        config.addClass(org.diplom.accounting_app.models.Receipt.class);
 
         return DatabaseFactory.create(config);
     }
