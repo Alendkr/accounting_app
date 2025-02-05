@@ -1,56 +1,45 @@
 package org.diplom.accounting_app.dao;
 
-import org.diplom.accounting_app.database.DatabaseConnection;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import io.ebean.DB;
+import org.diplom.accounting_app.models.User;
 
 public class UserDAO {
 
     public static boolean isValidCredentials(String login, String password) {
-        String query = "SELECT COUNT(*) FROM Users WHERE Login = ? AND Password = ?";
-        try (Connection conn = DatabaseConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, login);
-            stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
-
-            return rs.next() && rs.getInt(1) > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        User user = DB.find(User.class)
+                .where()
+                .eq("login", login)
+                .eq("password", password)
+                .findOne();
+        return user != null;
     }
 
     public static boolean registerUser(String username, String login, String password, Integer money) {
         if (username == null || login == null || password == null) {
-            return false; // Проверка на null
+            return false;
         }
 
-        String checkLoginQuery = "SELECT COUNT(*) FROM Users WHERE Login = ?";
-        String insertUserQuery = "INSERT INTO Users (Name, Login, Password, Money) VALUES (?, ?, ?, ?)";
+        // Check if user exists
+        User existingUser = DB.find(User.class)
+                .where()
+                .eq("login", login)
+                .findOne();
 
-        try (Connection conn = DatabaseConnection.connect();
-             PreparedStatement checkStmt = conn.prepareStatement(checkLoginQuery);
-             PreparedStatement insertStmt = conn.prepareStatement(insertUserQuery)) {
+        if (existingUser != null) {
+            return false;
+        }
 
-            checkStmt.setString(1, login);
-            ResultSet rs = checkStmt.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) {
-                return false; // Логин уже существует
-            }
+        // Create new user
+        User user = new User();
+        user.setName(username);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setMoney(money);
 
-            insertStmt.setString(1, username);
-            insertStmt.setString(2, login);
-            insertStmt.setString(3, password);
-            insertStmt.setInt(4, money);
-            insertStmt.executeUpdate();
-
+        try {
+            user.save();
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
