@@ -4,10 +4,16 @@ import io.ebean.Model;
 import io.ebean.annotation.NotNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Users")
+@Getter
+@Setter
 public class User extends Model {
 
     @Id
@@ -24,44 +30,50 @@ public class User extends Model {
 
     private Integer money;
 
-    // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
+//    @OneToMany(mappedBy = "user")
+//    private List<Expense> expenses;
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Receipt> receipts;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Integer getMoney() {
-        return money;
-    }
-
-    public void setMoney(Integer money) {
-        this.money = money;
-    }
+//    // Getters and Setters
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getLogin() {
+//        return login;
+//    }
+//
+//    public void setLogin(String login) {
+//        this.login = login;
+//    }
+//
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
+//
+//    public Integer getMoney() {
+//        return money;
+//    }
+//
+//    public void setMoney(Integer money) {
+//        this.money = money;
+//    }
 }

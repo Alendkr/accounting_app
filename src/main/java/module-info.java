@@ -14,6 +14,7 @@ module org.diplom.accounting_app {
     requires io.ebean.datasource;
     requires io.ebean.api;
     requires io.ebean;
+    requires static lombok;
 
     opens org.diplom.accounting_app to javafx.fxml;
     opens org.diplom.accounting_app.models to io.ebean;

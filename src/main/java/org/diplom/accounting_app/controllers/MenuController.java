@@ -1,5 +1,6 @@
 package org.diplom.accounting_app.controllers;
 
+import jakarta.persistence.Id;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.diplom.accounting_app.database.DatabaseConnection;
+import org.diplom.accounting_app.models.Expense;
 import org.diplom.accounting_app.models.Transaction;
 
 import java.io.IOException;
@@ -23,6 +25,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+
+import io.ebean.DB;
+import org.diplom.accounting_app.database.DatabaseConnection;
+import org.diplom.accounting_app.config.EbeanDatabaseConfig;
 
 public class MenuController {
     @FXML
