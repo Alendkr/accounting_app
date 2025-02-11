@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.diplom.accounting_app.controllers.TransactionDialogController"
+            prefWidth="300" prefHeight="250">
+
+    <VBox spacing="10" alignment="CENTER" layoutX="20" layoutY="20">
+        <ChoiceBox fx:id="typeChoice"/>
+        <TextField fx:id="amountField" promptText="Сумма"/>
+        <DatePicker fx:id="datePicker"/>
+        <TextField fx:id="descriptionField" promptText="Описание"/>
+        <HBox spacing="10">
+            <Button fx:id="saveButton" text="Сохранить"/>
+            <Button fx:id="cancelButton" text="Отмена"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

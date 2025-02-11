@@ -1,0 +1,2 @@
+entity-packages: com.foreach.ebean.model
+transactional-packages: com.foreach.ebean.app

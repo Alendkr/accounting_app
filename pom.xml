@@ -90,6 +90,51 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+            <!-- Основная зависимость Ebean -->
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-core</artifactId>
+            <version>15.8.1</version>
+        </dependency>
+
+            <!-- Для генерации query-бинов (опционально, но рекомендуется) -->
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean</artifactId>
+            <version>15.8.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-maven-plugin</artifactId>
+            <version>15.8.1</version>
+        </dependency>
+            <!-- Драйвер базы данных (например, H2, PostgreSQL, MySQL) -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.48.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -122,6 +167,37 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- Плагин Ebean для обработки аннотаций (enhancement) -->
+            <plugin>
+                <groupId>io.ebean</groupId>
+                <artifactId>ebean-maven-plugin</artifactId>
+                <version>15.8.1</version> <!-- Используйте актуальную версию -->
+                <executions>
+                    <execution>
+                        <id>enhance</id>
+                        <phase>process-classes</phase> <!-- Запускается после компиляции -->
+                        <goals>
+                            <goal>enhance</goal> <!-- Цель: обработка аннотаций -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>23</source> <!-- depending on your project -->
+                    <target>23</target> <!-- depending on your project -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.36</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>

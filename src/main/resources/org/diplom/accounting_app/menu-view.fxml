@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.MenuController">
+
+    <left>
+        <TableView fx:id="expensesTable" prefWidth="250.0">
+            <columns>
+                <TableColumn fx:id="expenseAmountColumn" prefWidth="122.99999696016312" text="Сумма" />
+                <TableColumn fx:id="expenseDateColumn" prefWidth="126.60000610351562" text="Дата" />
+            </columns>
+        </TableView>
+    </left>
+
+    <right>
+        <TableView fx:id="receiptsTable" prefWidth="250.0">
+            <columns>
+                <TableColumn fx:id="receiptAmountColumn" prefWidth="128.99999392032623" text="Сумма" />
+                <TableColumn fx:id="receiptDateColumn" prefWidth="120.5999755859375" text="Дата" />
+            </columns>
+        </TableView>
+    </right>
+
+    <center>
+        <VBox alignment="CENTER" spacing="10.0">
+            <PieChart fx:id="financeChart" prefHeight="300.0" prefWidth="300.0" />
+            <Button fx:id="addButton" text="Добавить запись" onAction="#addButtonClick">
+            <font>
+               <Font size="16.0" />
+            </font></Button>
+        </VBox>
+    </center>
+
+</BorderPane>
