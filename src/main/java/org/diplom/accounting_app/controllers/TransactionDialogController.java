@@ -28,7 +28,7 @@ public class TransactionDialogController {
 
     @FXML
     public void initialize() {
-        typeChoice.getItems().addAll("Доход", "Расход");
+//        typeChoice.getItems().addAll("Доход", "Расход");
         typeChoice.setValue("Доход");
 
         saveButton.setOnAction(event -> saveTransaction());

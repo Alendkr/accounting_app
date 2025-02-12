@@ -1,77 +1,124 @@
 package org.diplom.accounting_app.controllers;
 
+import io.ebean.DB;
+import io.ebean.Query;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.collections.ObservableList;
 import org.diplom.accounting_app.models.Expense;
 import org.diplom.accounting_app.models.Receipt;
+import javafx.scene.chart.PieChart;
 import org.diplom.accounting_app.services.FinanceService;
 import org.diplom.accounting_app.services.TransactionService;
 
+import java.util.List;
+
 public class MenuController {
-//    @FXML
-//    private TableView<Expense> expensesTable;
-//    @FXML
-//    private TableView<Receipt> receiptsTable;
+
+
+
+
+    private enum TableState {
+        RECEIPTS, EXPENSES, ALL
+    }
+
+    private TableState currentTableState;
+
     @FXML
-    private TableView<?> transactionsTable;
-//    @FXML
-//    private TableColumn<Receipt, Integer> receiptAmountColumn;
+    private TableView<TransactionItem> transactionsTable;
+
     @FXML
-    private TableColumn<Receipt, String> receiptDateColumn;
+    private TableColumn<TransactionItem, Double> amountColumn;
+
     @FXML
-    private TableColumn<Expense, Integer> expenseAmountColumn;
-    @FXML
-   private TableColumn<Expense, String> expenseDateColumn;
+    private TableColumn<TransactionItem, String> dateColumn;
 
     @FXML
     private PieChart financeChart;
 
-
     private final FinanceService financeService = new FinanceService();
     private final TransactionService transactionService = new TransactionService();
 
-
     @FXML
     public void initialize() {
-        setupTableColumns();
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         updateChart();
     }
-    // Настройка столбцов таблиц
-    private void setupTableColumns() {
-        expenseAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        expenseDateColumn.setCellValueFactory(new PropertyValueFactory<>("expenseDate"));
 
+    @FXML
+    private void receiptButtonClick() {
+        currentTableState = TableState.RECEIPTS;
+        loadReceipts();
     }
 
-    // Обновление диаграммы
-    private void updateChart() {
-        financeService.updatePieChart(financeChart);
+    @FXML
+    private void expenseButtonClick() {
+        currentTableState = TableState.EXPENSES;
+        loadExpenses();
     }
+    @FXML
+    private void historyButtonClick() {
+        currentTableState = TableState.ALL;
+    }
+
+
+    private void loadReceipts() {
+        Query<Receipt> query = DB.find(Receipt.class);
+        ObservableList<TransactionItem> receipts = FXCollections.observableArrayList();
+        for (Receipt receipt : query.findList()) {
+            receipts.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString()));
+        }
+        transactionsTable.setItems(receipts);
+    }
+
+    private void loadExpenses() {
+        Query<Expense> query = DB.find(Expense.class);
+        ObservableList<TransactionItem> expenses = FXCollections.observableArrayList();
+        for (Expense expense : query.findList()) {
+            expenses.add(new TransactionItem(expense.getAmount(), expense.getExpenseDate().toString()));
+        }
+        transactionsTable.setItems(expenses);
+    }
+
     @FXML
     private void addButtonClick() {
         boolean transactionAdded = transactionService.showTransactionDialog();
         if (transactionAdded) {
+            if (currentTableState == TableState.RECEIPTS){
+                loadReceipts();
+            }
+            else if (currentTableState == TableState.EXPENSES){
+                loadExpenses();
+            } else if (currentTableState == null) {
+                updateChart();
+            }
             updateChart(); // Обновляем диаграмму
         }
     }
-    public void receiptButtonClick() {
-        transactionsTable.getColumns().clear();
-        TableColumn<Receipt, Integer> receiptAmountColumn = new TableColumn<>("Сумма");
-        receiptAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        TableColumn<Receipt, String> receiptDateColumn = new TableColumn<>("Дата");
-        receiptDateColumn.setCellValueFactory(new PropertyValueFactory<>("receiptDate"));
 
-        ObservableList<Receipt> receipts = financeService.loadReceipts();
+    public static class TransactionItem {
+        private final Integer amount;
+        private final String date;
 
+        public TransactionItem(Integer amount, String date) {
+            this.amount = amount;
+            this.date = date;
+        }
 
+        public Integer getAmount() {
+            return amount;
+        }
+
+        public String getDate() {
+            return date;
+        }
     }
-
-
-    public void expenseButtonClick(ActionEvent actionEvent) {
+    private void updateChart() {
+        financeService.updatePieChart(financeChart);
     }
 }
