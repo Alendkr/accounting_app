@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.diplom.accounting_app.controllers.TransactionDialogController"
-            prefWidth="300" prefHeight="250">
+<AnchorPane prefHeight="220.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.TransactionDialogController">
 
-    <VBox spacing="10" alignment="CENTER" layoutX="20" layoutY="20">
-        <ChoiceBox fx:id="typeChoice"/>
-        <TextField fx:id="amountField" promptText="Сумма"/>
-        <DatePicker fx:id="datePicker"/>
-        <TextField fx:id="descriptionField" promptText="Описание"/>
+    <VBox alignment="CENTER" layoutX="20" layoutY="20" spacing="10">
+        <!-- Добавляем элементы для выбора типа транзакции -->
+        <ChoiceBox fx:id="typeChoice" focusTraversable="false">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Доход" />
+                    <String fx:value="Расход" />
+                </FXCollections>
+            </items>
+        </ChoiceBox>
+        <TextField fx:id="amountField" focusTraversable="false" promptText="Сумма" />
+        <DatePicker fx:id="datePicker" focusTraversable="false" />
+        <TextField fx:id="descriptionField" focusTraversable="false" promptText="Описание" />
         <HBox spacing="10">
-            <Button fx:id="saveButton" text="Сохранить"/>
-            <Button fx:id="cancelButton" text="Отмена"/>
+            <Button fx:id="saveButton" text="Сохранить" />
+            <Button fx:id="cancelButton" text="Отмена" />
         </HBox>
     </VBox>
 </AnchorPane>

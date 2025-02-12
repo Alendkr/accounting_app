@@ -3,10 +3,7 @@ package org.diplom.accounting_app.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.diplom.accounting_app.models.CurrentUser;
-import org.diplom.accounting_app.models.Expense;
-import org.diplom.accounting_app.models.Receipt;
-import org.diplom.accounting_app.models.User;
+import org.diplom.accounting_app.services.TransactionService;
 
 import java.time.LocalDate;
 
@@ -25,75 +22,52 @@ public class TransactionDialogController {
     @FXML
     private Button cancelButton;
 
-    private MenuController menuController;
-
-    public void setMenuController(MenuController menuController) {
-        this.menuController = menuController;
-    }
+    private Stage dialogStage;
+    private final TransactionService transactionService = new TransactionService();
+    private boolean transactionSaved = false; // Флаг успешного сохранения
 
     @FXML
     public void initialize() {
         typeChoice.getItems().addAll("Доход", "Расход");
-        typeChoice.setValue("Доход"); // Значение по умолчанию
+        typeChoice.setValue("Доход");
 
-        saveButton.setOnAction(e -> saveTransaction());
-        cancelButton.setOnAction(e -> closeDialog());
+        saveButton.setOnAction(event -> saveTransaction());
+        cancelButton.setOnAction(event -> closeDialog());
+    }
+
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
     }
 
     private void saveTransaction() {
         String type = typeChoice.getValue();
-        int amount;
+        String amountText = amountField.getText();
         LocalDate date = datePicker.getValue();
         String description = descriptionField.getText();
 
+        // Валидация данных
+        if (type == null || amountText.isEmpty() || date == null) {
+            showAlert("Ошибка", "Заполните все поля!");
+            return;
+        }
+
+        int amount;
         try {
-            amount = Integer.parseInt(amountField.getText());
+            amount = Integer.parseInt(amountText);
         } catch (NumberFormatException e) {
             showAlert("Ошибка", "Введите корректную сумму!");
             return;
         }
 
-        if (date == null) {
-            showAlert("Ошибка", "Выберите дату!");
-            return;
+        // Передаём данные в `TransactionService`
+        boolean success = transactionService.saveTransaction(type, amount, date, description);
+
+        if (success) {
+            transactionSaved = true;
+            dialogStage.close();
+        } else {
+            showAlert("Ошибка", "Не удалось сохранить транзакцию!");
         }
-
-        User currentUser = CurrentUser.getCurrentUser();
-        if (currentUser == null) {
-            showAlert("Ошибка", "Не удалось определить пользователя!");
-            return;
-        }
-
-        try {
-            if (type.equals("Расход")) {
-                Expense expense = new Expense();
-                expense.setUser(currentUser);
-                expense.setAmount(amount);
-                expense.setExpenseDate(date);
-                expense.setDescription(description);
-                expense.save();
-            } else {
-                Receipt receipt = new Receipt();
-                receipt.setUser(currentUser);
-                receipt.setAmount(amount);
-                receipt.setReceiptDate(date);
-                receipt.setDescription(description);
-                receipt.save();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Ошибка", "Не удалось сохранить данные!");
-            return;
-        }
-
-        menuController.loadTransactions(); // Обновляем таблицы
-        menuController.updatePieChart(); // Обновляем диаграмму
-        closeDialog();
-    }
-
-    private void closeDialog() {
-        Stage stage = (Stage) saveButton.getScene().getWindow();
-        stage.close();
     }
 
     private void showAlert(String title, String message) {
@@ -102,5 +76,13 @@ public class TransactionDialogController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void closeDialog() {
+        dialogStage.close();
+    }
+
+    public boolean isTransactionSaved() {
+        return transactionSaved;
     }
 }

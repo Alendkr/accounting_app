@@ -5,6 +5,13 @@ import org.diplom.accounting_app.models.User;
 
 public class UserDAO {
 
+    public static User findUserByLogin(String login) {
+        return DB.find(User.class)
+                .where()
+                .eq("login", login)
+                .findOne();
+    }
+
     public static User findUserByLoginAndPassword(String login, String password) {
         return DB.find(User.class)
                 .where()
