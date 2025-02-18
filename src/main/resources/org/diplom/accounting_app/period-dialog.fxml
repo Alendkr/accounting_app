@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="106.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.PeriodDialogController">
+   <children>
+      <DatePicker layoutX="36.0" layoutY="17.0" prefHeight="25.0" prefWidth="227.0" />
+      <Button fx:id="findButton" layoutX="74.0" layoutY="65.0" mnemonicParsing="false" onAction="#findButtonClick" prefHeight="30.0" prefWidth="140.0" text="Поиск" textAlignment="CENTER" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" />
+   </children>
+</AnchorPane>

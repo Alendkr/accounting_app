@@ -30,35 +30,6 @@ public class FinanceService {
         return DB.find(Receipt.class).findList();
     }
 
-    // Загружаем расходы для текущего пользователя
-    public ObservableList<Expense> loadExpenses() {
-        if (CurrentUser.getCurrentUser() == null) {
-            System.out.println("Ошибка: Текущий пользователь не найден.");
-            return FXCollections.observableArrayList();
-        }
-
-        int userId = CurrentUser.getCurrentUser().getId();
-        List<Expense> expenses = getAllExpenses().stream()
-                .filter(expense -> expense.getUser().getId() == userId)
-                .collect(Collectors.toList());
-
-        return FXCollections.observableArrayList(expenses);
-    }
-
-    // Загружаем доходы для текущего пользователя
-    public ObservableList<Receipt> loadReceipts() {
-        if (CurrentUser.getCurrentUser() == null) {
-            System.out.println("Ошибка: Текущий пользователь не найден.");
-            return FXCollections.observableArrayList();
-        }
-
-        int userId = CurrentUser.getCurrentUser().getId();
-        List<Receipt> receipts = getAllReceipts().stream()
-                .filter(receipt -> receipt.getUser().getId() == userId)
-                .collect(Collectors.toList());
-
-        return FXCollections.observableArrayList(receipts);
-    }
 
     // Метод для обновления диаграммы
     public void updatePieChart(PieChart financeChart) {

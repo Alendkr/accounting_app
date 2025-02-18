@@ -13,7 +13,7 @@
          <Button fx:id="receiptButton" mnemonicParsing="false" onAction="#receiptButtonClick" opacity="0.5" text="Доходы" translateX="-150.0" translateY="150.0" />
        <Button fx:id="expenseButton" mnemonicParsing="false" onAction="#expenseButtonClick" opacity="0.5" text="Расходы" translateX="-60.0" translateY="110.0" />
          <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonClick" opacity="0.5" text="Общ. история" translateX="50.0" translateY="70.0" />
-         <Button fx:id="periodButton" mnemonicParsing="false" opacity="0.5" text="Период" translateX="160.0" translateY="30.0" />
+         <Button fx:id="periodButton" mnemonicParsing="false" onAction="#periodButtonClick" opacity="0.5" text="Период" translateX="160.0" translateY="30.0" />
             <Button fx:id="addButton" depthTest="DISABLE" onAction="#addButtonClick" opacity="0.5" text="+" translateX="230.0" translateY="-10.0">
                 <font>
                     <Font size="16.0" />

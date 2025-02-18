@@ -9,11 +9,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.diplom.accounting_app.models.CurrentUser;
 import org.diplom.accounting_app.models.Expense;
 import org.diplom.accounting_app.models.Receipt;
 import javafx.scene.chart.PieChart;
 import org.diplom.accounting_app.services.FinanceService;
 import org.diplom.accounting_app.services.TransactionService;
+import org.diplom.accounting_app.services.PeriodService;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class MenuController {
 
     private final FinanceService financeService = new FinanceService();
     private final TransactionService transactionService = new TransactionService();
+    private final PeriodService periodService = new PeriodService();
 
     @FXML
     public void initialize() {
@@ -64,13 +67,14 @@ public class MenuController {
     @FXML
     private void historyButtonClick() {
         currentTableState = TableState.ALL;
+        loadAll();
     }
 
 
     private void loadReceipts() {
         Query<Receipt> query = DB.find(Receipt.class);
         ObservableList<TransactionItem> receipts = FXCollections.observableArrayList();
-        for (Receipt receipt : query.findList()) {
+        for (Receipt receipt : query.where().eq("UserID", CurrentUser.getCurrentUser().getId()).findList()) {
             receipts.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString()));
         }
         transactionsTable.setItems(receipts);
@@ -79,11 +83,27 @@ public class MenuController {
     private void loadExpenses() {
         Query<Expense> query = DB.find(Expense.class);
         ObservableList<TransactionItem> expenses = FXCollections.observableArrayList();
-        for (Expense expense : query.findList()) {
+        for (Expense expense : query.where().eq("UserID", CurrentUser.getCurrentUser().getId()).findList()) {
             expenses.add(new TransactionItem(expense.getAmount(), expense.getExpenseDate().toString()));
         }
         transactionsTable.setItems(expenses);
     }
+
+    private void loadAll(){
+        Query<Expense> query1 = DB.find(Expense.class);
+        Query<Receipt> query2 = DB.find(Receipt.class);
+        ObservableList<TransactionItem> history = FXCollections.observableArrayList();
+        for (Expense expense : query1.where().eq("UserID", CurrentUser.getCurrentUser().getId()).findList()){
+            history.add(new TransactionItem(expense.getAmount() * -1, expense.getExpenseDate().toString()));
+        }
+        for (Receipt receipt : query2.where().eq("UserID", CurrentUser.getCurrentUser().getId()).findList()){
+            history.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString()));
+        }
+        transactionsTable.setItems(history);
+    }
+
+
+
 
     @FXML
     private void addButtonClick() {
@@ -94,11 +114,15 @@ public class MenuController {
             }
             else if (currentTableState == TableState.EXPENSES){
                 loadExpenses();
-            } else if (currentTableState == null) {
-                updateChart();
+            } else if (currentTableState == TableState.ALL) {
+                loadAll();
             }
             updateChart(); // Обновляем диаграмму
         }
+    }
+    @FXML
+    private void periodButtonClick(){
+        boolean periodAdded = periodService.showPeriodDialog();
     }
 
     public static class TransactionItem {
