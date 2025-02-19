@@ -4,8 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.diplom.accounting_app.services.TransactionService;
+import org.diplom.accounting_app.services.TransactionService.TransactionData;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class TransactionDialogController {
 
@@ -23,16 +25,15 @@ public class TransactionDialogController {
     private Button cancelButton;
 
     private Stage dialogStage;
-    private final TransactionService transactionService = new TransactionService();
-    private boolean transactionSaved = false; // Флаг успешного сохранения
+    private TransactionData transactionResult;
 
     @FXML
     public void initialize() {
-        typeChoice.getItems().addAll("Доход", "Расход");
+        // Префаером ставим доход, юзер не тупой, а так стало красивей
         typeChoice.setValue("Доход");
 
-        saveButton.setOnAction(event -> saveTransaction());
-        cancelButton.setOnAction(event -> closeDialog());
+        saveButton.setOnAction( _ -> saveTransaction());
+        cancelButton.setOnAction( _ -> closeDialog());
     }
 
     public void setDialogStage(Stage dialogStage) {
@@ -45,7 +46,6 @@ public class TransactionDialogController {
         LocalDate date = datePicker.getValue();
         String description = descriptionField.getText();
 
-        // Валидация данных
         if (type == null || amountText.isEmpty() || date == null) {
             showAlert("Ошибка", "Заполните все поля!");
             return;
@@ -59,15 +59,15 @@ public class TransactionDialogController {
             return;
         }
 
-        // Передаём данные в `TransactionService`
-        boolean success = transactionService.saveTransaction(type, amount, date, description);
+        TransactionService.TransactionType transactionType =
+                type.equals("Доход") ? TransactionService.TransactionType.INCOME : TransactionService.TransactionType.EXPENSE;
 
-        if (success) {
-            transactionSaved = true;
-            dialogStage.close();
-        } else {
-            showAlert("Ошибка", "Не удалось сохранить транзакцию!");
-        }
+        transactionResult = new TransactionData(transactionType, amount, date, description);
+        dialogStage.close();
+    }
+
+    public Optional<TransactionData> getTransactionResult() {
+        return Optional.ofNullable(transactionResult);
     }
 
     private void showAlert(String title, String message) {
@@ -80,9 +80,5 @@ public class TransactionDialogController {
 
     private void closeDialog() {
         dialogStage.close();
-    }
-
-    public boolean isTransactionSaved() {
-        return transactionSaved;
     }
 }

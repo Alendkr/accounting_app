@@ -17,7 +17,25 @@ import java.util.Optional;
 
 public class TransactionService {
 
-    public boolean showTransactionDialog() {
+    public enum TransactionType {
+        INCOME, EXPENSE
+    }
+
+    public static class TransactionData {
+        public final TransactionType type;
+        public final int amount;
+        public final LocalDate date;
+        public final String description;
+
+        public TransactionData(TransactionType type, int amount, LocalDate date, String description) {
+            this.type = type;
+            this.amount = amount;
+            this.date = date;
+            this.description = description;
+        }
+    }
+
+    public Optional<TransactionData> showTransactionDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/diplom/accounting_app/transaction-dialog.fxml"));
             Stage dialogStage = new Stage();
@@ -30,21 +48,23 @@ public class TransactionService {
 
             dialogStage.showAndWait();
 
-            // Проверяем, была ли транзакция успешно сохранена
-            return controller.isTransactionSaved();
+            return controller.getTransactionResult().map(data ->
+                    new TransactionData(data.type, data.amount, data.date, data.description)
+            );
+
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return Optional.empty();
         }
     }
 
-    public boolean saveTransaction(String type, int amount, LocalDate date, String description) {
+    public boolean saveTransaction(TransactionType type, int amount, LocalDate date, String description) {
         User currentUser = CurrentUser.getCurrentUser();
         if (currentUser == null) {
-            return false; // Нет текущего пользователя
+            return false;
         }
 
-        if ("Расход".equals(type)) {
+        if (type == TransactionType.EXPENSE) {
             return saveExpense(amount, date, description, currentUser);
         } else {
             return saveReceipt(amount, date, description, currentUser);
@@ -52,13 +72,12 @@ public class TransactionService {
     }
 
     private boolean saveExpense(int amount, LocalDate date, String description, User user) {
-        Expense expense = new Expense();
-        expense.setUser(user);
-        expense.setAmount(amount);
-        expense.setExpenseDate(date);
-        expense.setDescription(description);
-
         try {
+            Expense expense = new Expense();
+            expense.setUser(user);
+            expense.setAmount(amount);
+            expense.setExpenseDate(date);
+            expense.setDescription(description);
             DB.save(expense);
             return true;
         } catch (Exception e) {
@@ -68,13 +87,12 @@ public class TransactionService {
     }
 
     private boolean saveReceipt(int amount, LocalDate date, String description, User user) {
-        Receipt receipt = new Receipt();
-        receipt.setUser(user);
-        receipt.setAmount(amount);
-        receipt.setReceiptDate(date);
-        receipt.setDescription(description);
-
         try {
+            Receipt receipt = new Receipt();
+            receipt.setUser(user);
+            receipt.setAmount(amount);
+            receipt.setReceiptDate(date);
+            receipt.setDescription(description);
             DB.save(receipt);
             return true;
         } catch (Exception e) {

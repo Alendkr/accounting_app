@@ -20,9 +20,9 @@ public class UserDAO {
                 .findOne();
     }
 
-    public static boolean isValidCredentials(String login, String password) {
-        return findUserByLoginAndPassword(login, password) != null;
-    }
+//    public static boolean isValidCredentials(String login, String password) {
+//        return findUserByLoginAndPassword(login, password) != null;
+//    }
 
     public static boolean registerUser(String username, String login, String password, Integer money) {
         if (username == null || login == null || password == null) {

@@ -1,15 +1,19 @@
 package org.diplom.accounting_app.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.collections.ObservableList;
+import javafx.util.Pair;
 import org.diplom.accounting_app.models.Expense;
 import org.diplom.accounting_app.models.Receipt;
 import org.diplom.accounting_app.services.FinanceService;
 import org.diplom.accounting_app.services.TransactionService;
+
+import java.util.List;
+import java.util.Optional;
 
 public class MenuController {
     @FXML
@@ -30,14 +34,12 @@ public class MenuController {
     private final FinanceService financeService = new FinanceService();
     private final TransactionService transactionService = new TransactionService();
 
-
     @FXML
     public void initialize() {
         setupTableColumns();
         loadTables();
         updateChart();
     }
-    // Настройка столбцов таблиц
 
     private void setupTableColumns() {
         expenseAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
@@ -45,27 +47,33 @@ public class MenuController {
         receiptAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
         receiptDateColumn.setCellValueFactory(new PropertyValueFactory<>("receiptDate"));
     }
-    // Загрузка таблиц
 
     private void loadTables() {
-        ObservableList<Expense> expenses = financeService.loadExpenses();
-        ObservableList<Receipt> receipts = financeService.loadReceipts();
+        List<Expense> expenses = financeService.loadExpenses();
+        List<Receipt> receipts = financeService.loadReceipts();
 
-        expensesTable.setItems(expenses);
-        receiptsTable.setItems(receipts);
+        expensesTable.setItems(FXCollections.observableArrayList(expenses));
+        receiptsTable.setItems(FXCollections.observableArrayList(receipts));
     }
-    // Обновление диаграммы
 
     private void updateChart() {
-        financeService.updatePieChart(financeChart);
-    }
-    @FXML
-    private void addButtonClick() {
-        boolean transactionAdded = transactionService.showTransactionDialog();
-        if (transactionAdded) {
-            loadTables(); // Перезагружаем таблицы
-            updateChart(); // Обновляем диаграмму
-        }
+        Pair<Integer, Integer> financeData = financeService.getFinanceSummary();
+
+        financeChart.getData().clear(); // Удаляем старые данные перед обновлением
+        financeChart.getData().addAll(
+                new PieChart.Data("Доход", financeData.getKey()),
+                new PieChart.Data("Расход", financeData.getValue())
+        );
     }
 
+    @FXML
+    private void addButtonClick() {
+        Optional<TransactionService.TransactionData> data = transactionService.showTransactionDialog();
+        data.ifPresent(transactionData -> {
+            if (transactionService.saveTransaction(transactionData.type, transactionData.amount, transactionData.date, transactionData.description)) {
+                loadTables();
+                updateChart();
+            }
+        });
+    }
 }
