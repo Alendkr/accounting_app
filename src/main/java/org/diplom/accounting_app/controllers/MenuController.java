@@ -4,7 +4,6 @@ import io.ebean.DB;
 import io.ebean.Query;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -17,12 +16,7 @@ import org.diplom.accounting_app.services.FinanceService;
 import org.diplom.accounting_app.services.TransactionService;
 import org.diplom.accounting_app.services.PeriodService;
 
-import java.util.List;
-
 public class MenuController {
-
-
-
 
     private enum TableState {
         RECEIPTS, EXPENSES, ALL
@@ -123,6 +117,17 @@ public class MenuController {
     @FXML
     private void periodButtonClick(){
         boolean periodAdded = periodService.showPeriodDialog();
+        if (periodAdded) {
+            if (currentTableState == TableState.RECEIPTS){
+                loadReceipts();
+            }
+            else if (currentTableState == TableState.EXPENSES){
+                loadExpenses();
+            } else if (currentTableState == TableState.ALL) {
+                loadAll();
+            }
+            updateChart(); // Обновляем диаграмму
+        }
     }
 
     public static class TransactionItem {
