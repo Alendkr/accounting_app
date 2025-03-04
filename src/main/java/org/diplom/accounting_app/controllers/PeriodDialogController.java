@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 
 public class PeriodDialogController {
+    private boolean periodSelected = false;
 
     @FXML
     private ChoiceBox<String> periodChoiceBox;
@@ -30,8 +31,9 @@ public class PeriodDialogController {
 
     @FXML
     public void initialize() {
+        transactionTypeChoiceBox.setValue("Все транзакции");
         // Обработка выбора периода
-        periodChoiceBox.setOnAction(event -> {
+        periodChoiceBox.setOnAction(_ -> {
             String selectedPeriod = periodChoiceBox.getValue();
             boolean isCustomPeriod = "Свой период".equals(selectedPeriod);
 
@@ -40,11 +42,25 @@ public class PeriodDialogController {
             endDatePicker.setDisable(!isCustomPeriod);
         });
 
+        // Проверка дат
+        startDatePicker.setOnAction(_ -> {
+            LocalDate startDate = startDatePicker.getValue();
+            if (startDate != null) {
+                endDatePicker.setDayCellFactory(_ -> new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate date, boolean empty) {
+                        super.updateItem(date, empty);
+                        setDisable(empty || date.isBefore(startDate)); // Блокируем даты до startDate
+                    }
+                });
+            }
+        });
+
         // Обработка кнопки "Найти"
-        findButton.setOnAction(event -> handleFind());
+        findButton.setOnAction(_ -> handleFind());
 
         // Обработка кнопки "Отмена"
-        cancelButton.setOnAction(event -> closeDialog());
+        cancelButton.setOnAction(_ -> closeDialog());
     }
 
     public void setDialogStage(Stage stage) {
@@ -62,15 +78,21 @@ public class PeriodDialogController {
             return;
         }
 
+        periodSelected = true; // Устанавливаем флаг, что период выбран!
+
         System.out.println("Период: " + selectedPeriod);
         System.out.println("Тип транзакции: " + transactionType);
         if (startDate != null && endDate != null) {
             System.out.println("С " + startDate + " по " + endDate);
         }
 
-        // Можно передать данные обратно или сразу загрузить таблицы
         dialogStage.close();
     }
+
+    public String getSelectedPeriod() {
+        return periodChoiceBox.getValue();
+    }
+
 
     private void closeDialog() {
         dialogStage.close();
@@ -83,5 +105,18 @@ public class PeriodDialogController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    public boolean isPeriodSelected() {
+        return periodSelected;
+    }
+
+    public LocalDate getStartDate() {
+        return startDatePicker.getValue();
+    }
+
+    public LocalDate getEndDate() {
+        return endDatePicker.getValue();
+    }
+
 }
 

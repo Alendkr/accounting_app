@@ -5,7 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="220.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.TransactionDialogController">
+<AnchorPane prefHeight="220.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.diplom.accounting_app.controllers.TransactionDialogController">
 
     <VBox alignment="CENTER" layoutX="20" layoutY="20" spacing="10">
         <!-- Добавляем элементы для выбора типа транзакции -->

@@ -7,9 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
 import org.diplom.accounting_app.models.CurrentUser;
-
+import org.diplom.accounting_app.models.TransactionItem;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class FinanceService {
 
@@ -56,4 +56,25 @@ public class FinanceService {
         financeChart.getData().add(new PieChart.Data("Доходы", totalReceipts));
         financeChart.getData().add(new PieChart.Data("Расходы", totalExpenses));
     }
+
+    public void updatePieChartForPeriod(PieChart chart, List<TransactionItem> transactions) {
+        int totalIncome = 0;
+        int totalExpense = 0;
+
+        for (TransactionItem item : transactions) {
+            if (item.getAmount() > 0) {
+                totalIncome += item.getAmount();
+            } else {
+                totalExpense += Math.abs(item.getAmount());
+            }
+        }
+
+        ObservableList<PieChart.Data> chartData = FXCollections.observableArrayList(
+                new PieChart.Data("Доходы", totalIncome),
+                new PieChart.Data("Расходы", totalExpense)
+        );
+
+        chart.setData(chartData);
+    }
+
 }
