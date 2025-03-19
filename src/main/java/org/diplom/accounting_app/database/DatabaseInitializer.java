@@ -16,14 +16,25 @@ public class DatabaseInitializer {
                 );
                 """;
 
+        String createCategoryTable = """
+                CREATE TABLE IF NOT EXISTS Categories (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT UNIQUE NOT NULL,
+                    UserID INTEGER NOT NULL,  -- Добавляем колонку UserID
+                    FOREIGN KEY (UserID) REFERENCES Users(ID) ON DELETE CASCADE
+                );
+                """;
+
         String createExpensesTable = """
                 CREATE TABLE IF NOT EXISTS Expenses (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     UserID INTEGER NOT NULL,
+                    CategoryID INTEGER,
                     Descr TEXT,
                     Amount INTEGER NOT NULL,
                     expense_date DATE NOT NULL,
-                    FOREIGN KEY (UserID) REFERENCES Users(ID)
+                    FOREIGN KEY (UserID) REFERENCES Users(ID) ON DELETE CASCADE,
+                    FOREIGN KEY (CategoryID) REFERENCES Categories(ID) ON DELETE SET NULL
                 );
                 """;
 
@@ -31,15 +42,18 @@ public class DatabaseInitializer {
                 CREATE TABLE IF NOT EXISTS Receipts (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     UserID INTEGER NOT NULL,
+                    CategoryID INTEGER,
                     Descr TEXT,
                     Amount INTEGER NOT NULL,
                     receipt_date DATE NOT NULL,
-                    FOREIGN KEY (UserID) REFERENCES Users(ID)
+                    FOREIGN KEY (UserID) REFERENCES Users(ID) ON DELETE CASCADE,
+                    FOREIGN KEY (CategoryID) REFERENCES Categories(ID) ON DELETE SET NULL
                 );
                 """;
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(createUsersTable);
+            stmt.execute(createCategoryTable);
             stmt.execute(createExpensesTable);
             stmt.execute(createReceiptsTable);
             System.out.println("Все таблицы успешно созданы.");

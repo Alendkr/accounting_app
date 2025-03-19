@@ -4,15 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.diplom.accounting_app.models.TransactionItem;
 import org.diplom.accounting_app.services.FinanceService;
 import org.diplom.accounting_app.services.TransactionService;
 import org.diplom.accounting_app.services.PeriodService;
+import org.diplom.accounting_app.services.CategoryService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,10 +40,14 @@ public class MenuController {
     @FXML
     private PieChart financeChart;
 
+    @FXML
+    private Button manageCategoriesButton;
+
     private final FinanceService financeService = new FinanceService();
 
     private final TransactionService transactionService = new TransactionService();
     private final PeriodService periodService = new PeriodService();
+    private final CategoryService categoryService = new CategoryService();
 
     @FXML
     public void initialize() {
@@ -54,6 +56,17 @@ public class MenuController {
         currentTableState = TableState.ALL;
         loadTransactions(transactionService.getAllTransactions());
         updateChart();
+    }
+
+
+
+    @FXML
+    private void manageCategoriesButton() {
+        try {
+            categoryService.showCategoryDialog();  // Открывает диалог управления категориями
+        } catch (Exception e) {
+            showAlert("Ошибка", "Не удалось открыть окно категорий", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
@@ -144,5 +157,13 @@ public class MenuController {
 
     private void updateChart() {
         financeService.updatePieChart(financeChart);
+    }
+
+    private void showAlert(String title, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

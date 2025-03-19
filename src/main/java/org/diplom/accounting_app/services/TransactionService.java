@@ -34,28 +34,24 @@ public class TransactionService {
         }
     }
 
-    public boolean saveTransaction(String type, int amount, LocalDate date, String description) {
+    public boolean saveTransaction(String type, int amount, LocalDate date, String description, Category category) {
         User currentUser = CurrentUser.getCurrentUser();
         if (currentUser == null) {
             return false;
         }
 
         if ("Расход".equals(type)) {
-            return saveExpense(amount, date, description, currentUser);
+            return saveExpense(amount, date, description, category, currentUser);
         } else {
-            return saveReceipt(amount, date, description, currentUser);
+            return saveReceipt(amount, date, description, category, currentUser);
         }
     }
 
-    private boolean saveExpense(int amount, LocalDate date, String description, User user) {
-        Expense expense = new Expense();
-        expense.setUser(user);
-        expense.setAmount(amount);
-        expense.setExpenseDate(date);
-        expense.setDescription(description);
+    private boolean saveExpense(int amount, LocalDate date, String description, Category category, User user) {
+        Expense expense = new Expense(user, description, amount, date, category);  // Создаем новый объект через конструктор
 
         try {
-            DB.save(expense);
+            DB.save(expense);  // Сохраняем объект в базу данных
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,13 +59,9 @@ public class TransactionService {
         }
     }
 
-    private boolean saveReceipt(int amount, LocalDate date, String description, User user) {
-        Receipt receipt = new Receipt();
-        receipt.setUser(user);
-        receipt.setAmount(amount);
-        receipt.setReceiptDate(date);
-        receipt.setDescription(description);
 
+    private boolean saveReceipt(int amount, LocalDate date, String description, Category category, User user) {
+        Receipt receipt = new Receipt(user, description, amount, date, category);
         try {
             DB.save(receipt);
             return true;
@@ -79,7 +71,7 @@ public class TransactionService {
         }
     }
 
-    //  Получение доходов
+    // Получение доходов
     public List<TransactionItem> getReceipts() {
         List<TransactionItem> receipts = new ArrayList<>();
         List<Receipt> receiptList = DB.find(Receipt.class)
@@ -87,12 +79,13 @@ public class TransactionService {
                 .findList();
 
         for (Receipt receipt : receiptList) {
-            receipts.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString()));
+            String categoryName = receipt.getCategory() != null ? receipt.getCategory().getName() : "Без категории";
+            receipts.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString(), categoryName));  // Добавляем категорию
         }
         return receipts;
     }
 
-    //  Получение расходов
+    // Получение расходов
     public List<TransactionItem> getExpenses() {
         List<TransactionItem> expenses = new ArrayList<>();
         List<Expense> expenseList = DB.find(Expense.class)
@@ -100,13 +93,13 @@ public class TransactionService {
                 .findList();
 
         for (Expense expense : expenseList) {
-            expenses.add(new TransactionItem(expense.getAmount(), expense.getExpenseDate().toString()));
+            String categoryName = expense.getCategory() != null ? expense.getCategory().getName() : "Без категории";
+            expenses.add(new TransactionItem(expense.getAmount(), expense.getExpenseDate().toString(), categoryName));  // Добавляем категорию
         }
         return expenses;
     }
 
-
-    //  Получение всей истории (доходы и расходы)
+    // Получение всей истории (доходы и расходы)
     public List<TransactionItem> getAllTransactions() {
         List<TransactionItem> history = new ArrayList<>();
 
@@ -119,14 +112,15 @@ public class TransactionService {
                 .findList();
 
         for (Expense expense : expenses) {
-            history.add(new TransactionItem(expense.getAmount() * -1, expense.getExpenseDate().toString()));
+            String categoryName = expense.getCategory() != null ? expense.getCategory().getName() : "Без категории";
+            history.add(new TransactionItem(expense.getAmount() * -1, expense.getExpenseDate().toString(), categoryName));  // Добавляем категорию
         }
         for (Receipt receipt : receipts) {
-            history.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString()));
+            String categoryName = receipt.getCategory() != null ? receipt.getCategory().getName() : "Без категории";
+            history.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString(), categoryName));  // Добавляем категорию
         }
 
         return history;
-
     }
 
     public List<TransactionItem> getTransactionsForPeriod(LocalDate startDate, LocalDate endDate) {
@@ -139,7 +133,6 @@ public class TransactionService {
                 .le("strftime('%Y-%m-%d', expense_date)", endDate.toString())
                 .findList();
 
-
         List<Receipt> receipts = DB.find(Receipt.class)
                 .where()
                 .eq("UserID", CurrentUser.getCurrentUser().getId())
@@ -148,14 +141,14 @@ public class TransactionService {
                 .findList();
 
         for (Expense expense : expenses) {
-            transactions.add(new TransactionItem(expense.getAmount() * -1, expense.getExpenseDate().toString()));
+            String categoryName = expense.getCategory() != null ? expense.getCategory().getName() : "Без категории";
+            transactions.add(new TransactionItem(expense.getAmount() * -1, expense.getExpenseDate().toString(), categoryName));  // Добавляем категорию
         }
         for (Receipt receipt : receipts) {
-            transactions.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString()));
+            String categoryName = receipt.getCategory() != null ? receipt.getCategory().getName() : "Без категории";
+            transactions.add(new TransactionItem(receipt.getAmount(), receipt.getReceiptDate().toString(), categoryName));  // Добавляем категорию
         }
 
-        System.out.println("Загружено " + transactions.size() + " транзакций из базы данных.");
         return transactions;
     }
-
 }

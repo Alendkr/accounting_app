@@ -30,6 +30,7 @@ public class EbeanDatabaseConfig {
         config.addClass(org.diplom.accounting_app.models.User.class);
         config.addClass(org.diplom.accounting_app.models.Expense.class);
         config.addClass(org.diplom.accounting_app.models.Receipt.class);
+        config.addClass(org.diplom.accounting_app.models.Category.class);
 
         return DatabaseFactory.create(config);
     }

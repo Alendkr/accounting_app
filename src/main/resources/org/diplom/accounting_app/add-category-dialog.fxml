@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.diplom.accounting_app.controllers.AddCategoryDialogController"
+      spacing="10" alignment="CENTER">
+
+    <Label text="Введите название категории" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+    <TextField fx:id="categoryNameField" maxWidth="200"/>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="addButton"  text="Добавить"/>
+        <Button fx:id="cancelButton" onAction="#handleExitButton" text="Отмена"/>
+    </HBox>
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+</VBox>

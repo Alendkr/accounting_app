@@ -11,7 +11,6 @@ import java.time.LocalDate;
 public class Receipt extends Model {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
@@ -25,7 +24,20 @@ public class Receipt extends Model {
     private int amount;
 
     @NotNull
+    @Column(name = "receipt_date")
     private LocalDate receiptDate;
+
+    @ManyToOne
+    @JoinColumn(name = "CategoryID")
+    private Category category;
+
+    public Receipt(User user, String descr, int amount, LocalDate receiptDate, Category category) {
+        this.user = user;
+        this.descr = descr;
+        this.amount = amount;
+        this.receiptDate = receiptDate;
+        this.category = category;
+    }
 
     public Integer getId() {
         return id;
@@ -43,12 +55,12 @@ public class Receipt extends Model {
         this.user = user;
     }
 
-    public String getDescription() {
+    public String getDescr() {
         return descr;
     }
 
-    public void setDescription(String description) {
-        this.descr = description;
+    public void setDescr(String descr) {
+        this.descr = descr;
     }
 
     public int getAmount() {
@@ -65,5 +77,13 @@ public class Receipt extends Model {
 
     public void setReceiptDate(LocalDate receiptDate) {
         this.receiptDate = receiptDate;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

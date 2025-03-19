@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.diplom.accounting_app.controllers.MenuController">
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.MenuController">
 
-    <center>
-        <VBox alignment="CENTER" spacing="10.0">
-            <PieChart fx:id="financeChart" prefHeight="300.0" prefWidth="300.0" translateY="100.0" />
-         <Button fx:id="receiptButton" mnemonicParsing="false" onAction="#receiptButtonClick" opacity="0.5" text="Доходы" translateX="-150.0" translateY="150.0" />
-       <Button fx:id="expenseButton" mnemonicParsing="false" onAction="#expenseButtonClick" opacity="0.5" text="Расходы" translateX="-60.0" translateY="110.0" />
-         <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonClick" opacity="0.5" text="Общ. история" translateX="50.0" translateY="70.0" />
-         <Button fx:id="periodButton" mnemonicParsing="false" onAction="#periodButtonClick" opacity="0.5" text="Период" translateX="160.0" translateY="30.0" />
-            <Button fx:id="addButton" depthTest="DISABLE" onAction="#addButtonClick" opacity="0.5" text="+" translateX="230.0" translateY="-10.0">
-                <font>
-                    <Font size="16.0" />
-                </font>
-         </Button>
-         <TableView fx:id="transactionsTable" maxHeight="350.0" maxWidth="450.0" minHeight="0.0" prefHeight="250.0" prefWidth="0.0">
+            <PieChart fx:id="financeChart" prefHeight="300.0" prefWidth="300.0" translateY="20.0" />
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="receiptButton" mnemonicParsing="false" onAction="#receiptButtonClick" opacity="0.5" text="Доходы">
+            <HBox.margin>
+               <Insets right="12.0" />
+            </HBox.margin></Button>
+             <Button fx:id="expenseButton" mnemonicParsing="false" onAction="#expenseButtonClick" opacity="0.5" text="Расходы">
+            <HBox.margin>
+               <Insets right="12.0" />
+            </HBox.margin></Button>
+               <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonClick" opacity="0.5" text="Общ. история">
+            <HBox.margin>
+               <Insets right="12.0" />
+            </HBox.margin></Button>
+               <Button fx:id="periodButton" mnemonicParsing="false" onAction="#periodButtonClick" opacity="0.5" text="Период">
+            <HBox.margin>
+               <Insets right="12.0" />
+            </HBox.margin></Button>
+                  <Button fx:id="addButton" depthTest="DISABLE" onAction="#addButtonClick" opacity="0.5" scaleX="0.8" scaleY="0.7" text="+">
+                      <font>
+                          <Font size="16.0" />
+                      </font>
+               </Button>
+
+            </children>
+         </HBox>
+          <Button fx:id="manageCategoriesButton" onAction="#manageCategoriesButton" opacity="0.5" text="Управление категориями" translateX="321.0" translateY="-12.0" />
+         <TableView fx:id="transactionsTable" maxHeight="350.0" maxWidth="450.0" minHeight="0.0" prefHeight="250.0" prefWidth="0.0" translateX="175.0">
            <columns>
                <TableColumn fx:id="amountColumn" text="Сумма" />
                <TableColumn fx:id="dateColumn" text="Дата" />
@@ -30,6 +46,3 @@
             </columnResizePolicy>
          </TableView>
         </VBox>
-    </center>
-
-</BorderPane>

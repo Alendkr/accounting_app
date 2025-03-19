@@ -9,10 +9,10 @@ module org.diplom.accounting_app {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.sql;
-    requires java.desktop;
     requires jakarta.persistence.api;
     requires io.ebean.api;
     requires io.ebean;
+    requires org.jetbrains.annotations;
 
     opens org.diplom.accounting_app to javafx.fxml;
     opens org.diplom.accounting_app.models to io.ebean, javafx.base;

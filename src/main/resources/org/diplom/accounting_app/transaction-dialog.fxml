@@ -2,28 +2,44 @@
 
 <?import java.lang.*?>
 <?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="220.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.diplom.accounting_app.controllers.TransactionDialogController">
+<AnchorPane prefHeight="220.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.TransactionDialogController">
 
     <VBox alignment="CENTER" layoutX="20" layoutY="20" spacing="10">
-        <!-- Добавляем элементы для выбора типа транзакции -->
-        <ChoiceBox fx:id="typeChoice" focusTraversable="false">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="Доход" />
-                    <String fx:value="Расход" />
-                </FXCollections>
-            </items>
-        </ChoiceBox>
+      <HBox alignment="TOP_CENTER">
+         <children>
+              <!-- Добавляем элементы для выбора типа транзакции -->
+              <ChoiceBox fx:id="typeChoice" focusTraversable="false" prefWidth="70.0">
+                  <items>
+                      <FXCollections fx:factory="observableArrayList">
+                          <String fx:value="Доход" />
+                          <String fx:value="Расход" />
+                      </FXCollections>
+                  </items>
+              </ChoiceBox>
+            <ChoiceBox fx:id="categoryChoise" focusTraversable="false" layoutX="10.0" layoutY="10.0" prefWidth="70.0">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                  </FXCollections>
+               </items>
+               <HBox.margin>
+                  <Insets left="12.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
         <TextField fx:id="amountField" focusTraversable="false" promptText="Сумма" />
         <DatePicker fx:id="datePicker" focusTraversable="false" />
         <TextField fx:id="descriptionField" focusTraversable="false" promptText="Описание" />
         <HBox spacing="10">
             <Button fx:id="saveButton" text="Сохранить" />
-            <Button fx:id="cancelButton" text="Отмена" />
+            <Button fx:id="cancelButton" text="Отмена">
+            <HBox.margin>
+               <Insets left="32.0" />
+            </HBox.margin></Button>
         </HBox>
     </VBox>
 </AnchorPane>
