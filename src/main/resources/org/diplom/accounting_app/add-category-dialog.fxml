@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+<VBox xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.diplom.accounting_app.controllers.AddCategoryDialogController"
       spacing="10" alignment="CENTER">
 
@@ -12,8 +12,8 @@
     <TextField fx:id="categoryNameField" maxWidth="200"/>
 
     <HBox spacing="10" alignment="CENTER">
-        <Button fx:id="addButton"  text="Добавить"/>
-        <Button fx:id="cancelButton" onAction="#handleExitButton" text="Отмена"/>
+        <Button onAction="#handleSave" text="Добавить"/>
+        <Button onAction="#handleCancel" text="Отмена"/>
     </HBox>
 
     <padding>

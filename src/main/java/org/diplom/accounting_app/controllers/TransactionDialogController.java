@@ -4,12 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.diplom.accounting_app.models.Category;
+import org.diplom.accounting_app.services.CategoryService;
 import org.diplom.accounting_app.services.TransactionService;
 
 import java.time.LocalDate;
 
 public class TransactionDialogController {
-
 
     @FXML
     private ChoiceBox<String> typeChoice;
@@ -33,17 +33,36 @@ public class TransactionDialogController {
     private Button cancelButton;
 
     private Stage dialogStage;
-    private final TransactionService transactionService = new TransactionService();
+    //private final TransactionService transactionService = new TransactionService();
     private boolean transactionSaved = false; // Флаг успешного сохранения
 
     @FXML
     public void initialize() {
         typeChoice.setValue("Доход");
-        // categoryChoice.getItems().addAll(categoryService.getCategoriesForCurrentUser());
 
         saveButton.setOnAction(event -> saveTransaction());
         cancelButton.setOnAction(event -> closeDialog());
     }
+
+    private CategoryService categoryService;
+
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+        loadCategories();  // загружаем при установке
+    }
+
+    private void loadCategories() {
+        categoryChoice.getItems().clear();
+        categoryChoice.getItems().addAll(categoryService.getCategoriesForCurrentUser());
+    }
+
+    private TransactionService transactionService;
+
+    public void setTransactionService(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
+
 
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;

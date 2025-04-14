@@ -3,7 +3,8 @@ package org.diplom.accounting_app.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import org.diplom.accounting_app.models.Category;
 import org.diplom.accounting_app.services.CategoryService;
@@ -15,23 +16,27 @@ public class CategoryDialogController {
     @FXML
     private ListView<Category> categoryListView;
     @FXML
+    private Button addButton;
+    @FXML
     private Button deleteButton;
     @FXML
     private Button closeButton;
 
-    private  CategoryService categoryService = new CategoryService();
+    private CategoryService categoryService;
     private final ObservableList<Category> categories = FXCollections.observableArrayList();
     private Stage dialogStage;
-    private boolean isCategorySaved = false;
 
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @FXML
     private void initialize() {
-        loadCategories();
-        CategoryService categoryService = new CategoryService();
-        categoryService.setCategoryDialogController(this);
         categoryListView.setItems(categories);
-        deleteButton.disableProperty().bind(categoryListView.getSelectionModel().selectedItemProperty().isNull());
     }
 
     public void loadCategories() {
@@ -39,65 +44,23 @@ public class CategoryDialogController {
         categories.setAll(categoryList);
     }
 
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
+    @FXML
+    private void handleAddCategory() {
+        categoryService.showAddCategoryDialog();
+        loadCategories(); // Обновляем список после добавления
     }
-
-
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
-        categoryService.setCategoryDialogController(this); // Передаем ссылку
-    }
-
 
     @FXML
     private void handleDeleteCategory() {
         Category selectedCategory = categoryListView.getSelectionModel().getSelectedItem();
-        if (selectedCategory == null) {
-            showAlert("Ошибка", "Выберите категорию для удаления.", Alert.AlertType.WARNING);
-            return;
-        }
-
-        try {
+        if (selectedCategory != null) {
             categoryService.deleteCategory(selectedCategory);
             loadCategories();
-        } catch (Exception e) {
-            showAlert("Ошибка", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     private void handleClose() {
-        if (dialogStage != null) {
-            dialogStage.close();
-        }
+        dialogStage.close();
     }
-
-    private void showAlert(String title, String content, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    /**
-     * Возвращает true, если в диалоговом окне была добавлена категория.
-     */
-    public boolean isCategorySaved() {
-        return isCategorySaved;
-    }
-
-    /**
-     * Устанавливает флаг, если категория была сохранена.
-     */
-    public void setCategorySaved(boolean categorySaved) {
-        isCategorySaved = categorySaved;
-    }
-
-
-    public void showAddCategoryDialog() {
-        categoryService.showAddCategoryDialog();
-    }
-
 }

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.MenuController">
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.MenuController">
 
             <PieChart fx:id="financeChart" prefHeight="300.0" prefWidth="300.0" translateY="20.0" />
          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
@@ -36,7 +36,12 @@
             </children>
          </HBox>
           <Button fx:id="manageCategoriesButton" onAction="#manageCategoriesButton" opacity="0.5" text="Управление категориями" translateX="321.0" translateY="-12.0" />
-         <TableView fx:id="transactionsTable" maxHeight="350.0" maxWidth="450.0" minHeight="0.0" prefHeight="250.0" prefWidth="0.0" translateX="175.0">
+   <HBox alignment="CENTER">
+      <children>
+          <Label fx:id="periodLabel" alignment="CENTER" contentDisplay="CENTER" opacity="0.8" style="-fx-font-size: 12px;" text="Text" />
+      </children>
+   </HBox>
+    <TableView fx:id="transactionsTable" maxHeight="350.0" maxWidth="450.0" minHeight="0.0" prefHeight="250.0" prefWidth="0.0" translateX="175.0">
            <columns>
                <TableColumn fx:id="amountColumn" text="Сумма" />
                <TableColumn fx:id="dateColumn" text="Дата" />

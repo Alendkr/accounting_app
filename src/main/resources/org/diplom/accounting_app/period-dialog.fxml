@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.PeriodDialogController">
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.PeriodDialogController">
    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Выберите период">
       <VBox.margin>
          <Insets top="12.0" />

@@ -7,7 +7,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.diplom.accounting_app.models.TransactionItem;
-import org.diplom.accounting_app.services.FinanceService;
+import org.diplom.accounting_app.services.FinancePieChartService;
 import org.diplom.accounting_app.services.TransactionService;
 import org.diplom.accounting_app.services.PeriodService;
 import org.diplom.accounting_app.services.CategoryService;
@@ -17,13 +17,17 @@ import java.util.List;
 
 public class MenuController {
 
+    public MenuController() {
+        transactionService = new TransactionService(categoryService);
+    }
+
     private enum TableState {
         RECEIPTS, EXPENSES, ALL
     }
     private TableState currentTableState;
 
-    @FXML
-    private Label periodLabel;
+    public Label periodLabel;
+
 
     @FXML
     private Button resetFilterButton;
@@ -43,9 +47,10 @@ public class MenuController {
     @FXML
     private Button manageCategoriesButton;
 
-    private final FinanceService financeService = new FinanceService();
+    private final FinancePieChartService financePieChartService = new FinancePieChartService();
 
-    private final TransactionService transactionService = new TransactionService();
+    private final TransactionService transactionService;
+
     private final PeriodService periodService = new PeriodService();
     private final CategoryService categoryService = new CategoryService();
 
@@ -62,10 +67,14 @@ public class MenuController {
 
     @FXML
     private void manageCategoriesButton() {
-        try {
             categoryService.showCategoryDialog();  // Открывает диалог управления категориями
-        } catch (Exception e) {
-            showAlert("Ошибка", "Не удалось открыть окно категорий", Alert.AlertType.ERROR);
+    }
+
+    @FXML
+    private void addButtonClick() {
+        if (transactionService.showTransactionDialog()) {
+            reloadCurrentTable();
+            updateChart();
         }
     }
 
@@ -95,18 +104,10 @@ public class MenuController {
         transactionsTable.setItems(observableTransactions);
     }
 
-    @FXML
-    private void addButtonClick() {
-        if (transactionService.showTransactionDialog()) {
-            reloadCurrentTable();
-            updateChart();
-        }
-    }
-
     private void loadTransactionsForPeriod(LocalDate startDate, LocalDate endDate) {
         List<TransactionItem> transactions = transactionService.getTransactionsForPeriod(startDate, endDate);
         transactionsTable.getItems().setAll(transactions);
-        financeService.updatePieChartForPeriod(financeChart, transactions); // Обновляем диаграмму
+        financePieChartService.updatePieChartForPeriod(financeChart, transactions); // Обновляем диаграмму
     }
 
 
@@ -143,7 +144,7 @@ public class MenuController {
         currentTableState = TableState.ALL;
         transactionsTable.getItems().setAll(allTransactions);
 
-        financeService.updatePieChart(financeChart); // Возвращаемся к полному обзору
+        financePieChartService.updatePieChart(financeChart); // Возвращаемся к полному обзору
     }
 
 
@@ -156,7 +157,7 @@ public class MenuController {
     }
 
     private void updateChart() {
-        financeService.updatePieChart(financeChart);
+        financePieChartService.updatePieChart(financeChart);
     }
 
     private void showAlert(String title, String content, Alert.AlertType alertType) {

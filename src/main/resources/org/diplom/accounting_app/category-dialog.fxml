@@ -4,22 +4,24 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.CategoryDialogController">
+<VBox xmlns="http://javafx.com/javafx/17.0.6"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.diplom.accounting_app.controllers.CategoryDialogController">
 
     <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Категории" />
 
     <ListView fx:id="categoryListView" prefHeight="200" />
 
     <HBox alignment="TOP_CENTER" spacing="10">
-        <Button fx:id="addButton" onAction="#showAddCategoryDialog" text="Добавить">
+        <Button onAction="#handleAddCategory" text="Добавить">
          <HBox.margin>
             <Insets top="5.0" />
          </HBox.margin></Button>
-        <Button fx:id="deleteButton" onAction="#handleDeleteCategory" text="Удалить">
+        <Button onAction="#handleDeleteCategory" text="Удалить">
          <HBox.margin>
             <Insets top="5.0" />
          </HBox.margin></Button>
-        <Button fx:id="closeButton" onAction="#handleClose" text="Выход">
+        <Button onAction="#handleClose" text="Выход">
          <HBox.margin>
             <Insets left="2.0" top="5.0" />
          </HBox.margin></Button>

@@ -11,7 +11,7 @@ import org.diplom.accounting_app.models.TransactionItem;
 import java.util.List;
 
 
-public class FinanceService {
+public class FinancePieChartService {
 
     public void addExpense(Expense expense) {
         DB.save(expense);

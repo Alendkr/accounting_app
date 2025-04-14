@@ -15,6 +15,13 @@ import java.util.List;
 
 public class TransactionService {
 
+    private final CategoryService categoryService;
+
+    public TransactionService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+
     public boolean showTransactionDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/diplom/accounting_app/transaction-dialog.fxml"));
@@ -25,6 +32,7 @@ public class TransactionService {
 
             TransactionDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
+            controller.setCategoryService(categoryService); // ← вот где ты наконец-то используешь categoryService
 
             dialogStage.showAndWait();
             return controller.isTransactionSaved();
@@ -33,6 +41,7 @@ public class TransactionService {
             return false;
         }
     }
+
 
     public boolean saveTransaction(String type, int amount, LocalDate date, String description, Category category) {
         User currentUser = CurrentUser.getCurrentUser();
