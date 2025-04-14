@@ -1,5 +1,6 @@
 package org.diplom.accounting_app.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -56,37 +57,12 @@ public class PeriodDialogController {
             }
         });
 
-        // Обработка кнопки "Найти"
-        findButton.setOnAction(_ -> handleFind());
-
         // Обработка кнопки "Отмена"
         cancelButton.setOnAction(_ -> closeDialog());
     }
 
     public void setDialogStage(Stage stage) {
         this.dialogStage = stage;
-    }
-
-    private void handleFind() {
-        String selectedPeriod = periodChoiceBox.getValue();
-        String transactionType = transactionTypeChoiceBox.getValue();
-        LocalDate startDate = startDatePicker.getValue();
-        LocalDate endDate = endDatePicker.getValue();
-
-        if ("Свой период".equals(selectedPeriod) && (startDate == null || endDate == null)) {
-            showAlert("Ошибка", "Пожалуйста, выберите даты начала и окончания периода.");
-            return;
-        }
-
-        periodSelected = true; // Устанавливаем флаг, что период выбран!
-
-        System.out.println("Период: " + selectedPeriod);
-        System.out.println("Тип транзакции: " + transactionType);
-        if (startDate != null && endDate != null) {
-            System.out.println("С " + startDate + " по " + endDate);
-        }
-
-        dialogStage.close();
     }
 
     public String getSelectedPeriod() {
@@ -118,5 +94,26 @@ public class PeriodDialogController {
         return endDatePicker.getValue();
     }
 
+    public void findButtonClick(ActionEvent actionEvent) {
+        String selectedPeriod = periodChoiceBox.getValue();
+        String transactionType = transactionTypeChoiceBox.getValue();
+        LocalDate startDate = startDatePicker.getValue();
+        LocalDate endDate = endDatePicker.getValue();
+
+        if ("Свой период".equals(selectedPeriod) && (startDate == null || endDate == null)) {
+            showAlert("Ошибка", "Пожалуйста, выберите даты начала и окончания периода.");
+            return;
+        }
+
+        periodSelected = true; // Устанавливаем флаг, что период выбран!
+
+        System.out.println("Период: " + selectedPeriod);
+        System.out.println("Тип транзакции: " + transactionType);
+        if (startDate != null && endDate != null) {
+            System.out.println("С " + startDate + " по " + endDate);
+        }
+
+        dialogStage.close();
+    }
 }
 

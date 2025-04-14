@@ -52,7 +52,7 @@
       </items>
    </ChoiceBox>
    <HBox alignment="CENTER" spacing="10">
-      <Button fx:id="findButton" text="Найти">
+      <Button fx:id="findButton" text="Найти" onAction="#findButtonClick">
          <HBox.margin>
             <Insets bottom="10.0" />
          </HBox.margin></Button>

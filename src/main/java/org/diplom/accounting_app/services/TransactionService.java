@@ -31,6 +31,7 @@ public class TransactionService {
             dialogStage.setScene(new Scene(loader.load()));
 
             TransactionDialogController controller = loader.getController();
+            controller.setTransactionService(this);
             controller.setDialogStage(dialogStage);
             controller.setCategoryService(categoryService); // ← вот где ты наконец-то используешь categoryService
 

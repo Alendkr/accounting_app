@@ -2,6 +2,8 @@ package org.diplom.accounting_app.models;
 
 import io.ebean.Model;
 import jakarta.persistence.*;
+import lombok.ToString;
+
 import java.time.LocalDate;
 
 @Entity
@@ -77,4 +79,5 @@ public class Expense extends Model {
     public void setCategory(Category category) {
         this.category = category;
     }
+
 }
