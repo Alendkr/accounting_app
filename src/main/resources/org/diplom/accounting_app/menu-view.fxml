@@ -6,49 +6,57 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.MenuController">
-
-            <PieChart fx:id="financeChart" prefHeight="300.0" prefWidth="300.0" translateY="20.0" />
-         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-            <children>
-               <Button fx:id="receiptButton" mnemonicParsing="false" onAction="#receiptButtonClick" opacity="0.5" text="Доходы">
-            <HBox.margin>
-               <Insets right="12.0" />
-            </HBox.margin></Button>
-             <Button fx:id="expenseButton" mnemonicParsing="false" onAction="#expenseButtonClick" opacity="0.5" text="Расходы">
-            <HBox.margin>
-               <Insets right="12.0" />
-            </HBox.margin></Button>
-               <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonClick" opacity="0.5" text="Общ. история">
-            <HBox.margin>
-               <Insets right="12.0" />
-            </HBox.margin></Button>
-               <Button fx:id="periodButton" mnemonicParsing="false" onAction="#periodButtonClick" opacity="0.5" text="Период">
-            <HBox.margin>
-               <Insets right="12.0" />
-            </HBox.margin></Button>
-                  <Button fx:id="addButton" depthTest="DISABLE" onAction="#addButtonClick" opacity="0.5" scaleX="0.8" scaleY="0.7" text="+">
-                      <font>
-                          <Font size="16.0" />
-                      </font>
+<AnchorPane stylesheets="@../../../../java/org/diplom/accounting_app/styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.MenuController">
+   <children>
+      <VBox prefHeight="600.0" prefWidth="800.0" styleClass="table-view" stylesheets="@../../../../java/org/diplom/accounting_app/styles.css">
+      
+                  <PieChart fx:id="financeChart" prefHeight="300.0" prefWidth="300.0" translateY="20.0" />
+               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Button fx:id="receiptButton" mnemonicParsing="false" onAction="#receiptButtonClick" opacity="0.5" text="Доходы">
+                  <HBox.margin>
+                     <Insets right="12.0" />
+                  </HBox.margin>
                </Button>
-
+                   <Button fx:id="expenseButton" mnemonicParsing="false" onAction="#expenseButtonClick" opacity="0.5" text="Расходы">
+                  <HBox.margin>
+                     <Insets right="12.0" />
+                  </HBox.margin>
+               </Button>
+                     <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonClick" opacity="0.5" text="Общ. история">
+                  <HBox.margin>
+                     <Insets right="12.0" />
+                  </HBox.margin>
+               </Button>
+                     <Button fx:id="periodButton" mnemonicParsing="false" onAction="#periodButtonClick" opacity="0.5" text="Период">
+                  <HBox.margin>
+                     <Insets right="12.0" />
+                  </HBox.margin>
+               </Button>
+                        <Button fx:id="addButton" depthTest="DISABLE" onAction="#addButtonClick" opacity="0.5" scaleX="0.8" scaleY="0.7" text="+">
+                            <font>
+                                <Font size="16.0" />
+                            </font>
+                     </Button>
+      
+                  </children>
+               </HBox>
+                <Button fx:id="manageCategoriesButton" onAction="#manageCategoriesButton" opacity="0.5" text="Управление категориями" translateX="321.0" translateY="-12.0" />
+         <HBox alignment="CENTER">
+            <children>
+                <Label fx:id="periodLabel" alignment="CENTER" contentDisplay="CENTER" opacity="0.8" style="-fx-font-size: 12px;" text="Text" />
+               <Button fx:id="resetFilterButton" mnemonicParsing="false" onAction="#resetFilterClick" opacity="0.5" style="-fx-font-size: 12px;" text="R" />
             </children>
          </HBox>
-          <Button fx:id="manageCategoriesButton" onAction="#manageCategoriesButton" opacity="0.5" text="Управление категориями" translateX="321.0" translateY="-12.0" />
-   <HBox alignment="CENTER">
-      <children>
-          <Label fx:id="periodLabel" alignment="CENTER" contentDisplay="CENTER" opacity="0.8" style="-fx-font-size: 12px;" text="Text" />
-         <Button fx:id="resetFilterButton" opacity="0.8" style="-fx-font-size: 12px;" text="R" mnemonicParsing="false" onAction="#resetFilterClick" />
-      </children>
-   </HBox>
-    <TableView fx:id="transactionsTable" maxHeight="350.0" maxWidth="450.0" minHeight="0.0" prefHeight="250.0" prefWidth="0.0" translateX="175.0">
-           <columns>
-               <TableColumn fx:id="amountColumn" text="Сумма" />
-               <TableColumn fx:id="dateColumn" text="Дата" />
-           </columns>
-            <columnResizePolicy>
-               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-         </TableView>
-        </VBox>
+          <TableView fx:id="transactionsTable" maxHeight="350.0" maxWidth="450.0" minHeight="0.0" prefHeight="250.0" prefWidth="0.0" translateX="175.0">
+                 <columns>
+                     <TableColumn fx:id="amountColumn" style="-fx-background-color: #dfc1a6;" text="Сумма" />
+                     <TableColumn fx:id="dateColumn" style="-fx-background-color: #dfc1a6;" text="Дата" />
+                 </columns>
+                  <columnResizePolicy>
+                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                  </columnResizePolicy>
+               </TableView>
+              </VBox>
+   </children>
+</AnchorPane>

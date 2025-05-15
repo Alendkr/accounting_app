@@ -1,0 +1,23 @@
+
+.root{
+    -fx-background-color: #dfc1a6;
+}
+
+.button {
+    -fx-background-color: #984e26;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+
+}
+
+.button:hover{
+    -fx-background-color: #dfc1a6;
+}
+
+.table-view {
+    -fx-background-color: #dfc1a6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+

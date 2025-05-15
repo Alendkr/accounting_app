@@ -12,6 +12,7 @@ import org.diplom.accounting_app.services.TransactionService;
 import org.diplom.accounting_app.services.PeriodService;
 import org.diplom.accounting_app.services.CategoryService;
 
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class MenuController {
     @FXML
     private TableColumn<TransactionItem, Integer> amountColumn;
 
+
     @FXML
     private TableColumn<TransactionItem, String> dateColumn;
 
@@ -61,6 +63,7 @@ public class MenuController {
         currentTableState = TableState.ALL;
         loadTransactions(transactionService.getAllTransactions());
         updateChart();
+
     }
 
 

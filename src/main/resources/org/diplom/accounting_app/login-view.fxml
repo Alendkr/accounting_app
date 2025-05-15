@@ -4,15 +4,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="20.0"
-      xmlns="http://javafx.com/javafx/17.0.6"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.diplom.accounting_app.controllers.LoginController">
+<VBox alignment="CENTER" spacing="20.0" stylesheets="@../../../../java/org/diplom/accounting_app/styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.LoginController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
-    <Label text="Введите логин и пароль" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Введите логин и пароль" />
 
     <TextField fx:id="usernameField" promptText="Логин" />
 
