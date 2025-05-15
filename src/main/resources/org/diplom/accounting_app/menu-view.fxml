@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane stylesheets="@../../../../java/org/diplom/accounting_app/styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.MenuController">
+<AnchorPane stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.diplom.accounting_app.controllers.MenuController">
    <children>
-      <VBox prefHeight="600.0" prefWidth="800.0" styleClass="table-view" stylesheets="@../../../../java/org/diplom/accounting_app/styles.css">
+      <VBox prefHeight="600.0" prefWidth="800.0" styleClass="table-view" stylesheets="@../../../styles.css">
       
                   <PieChart fx:id="financeChart" prefHeight="300.0" prefWidth="300.0" translateY="20.0" />
                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
@@ -33,15 +33,21 @@
                      <Insets right="12.0" />
                   </HBox.margin>
                </Button>
-                        <Button fx:id="addButton" depthTest="DISABLE" onAction="#addButtonClick" opacity="0.5" scaleX="0.8" scaleY="0.7" text="+">
+                        <Button fx:id="addButton" depthTest="DISABLE" onAction="#addButtonClick" opacity="0.5" text="+">
                             <font>
                                 <Font size="16.0" />
                             </font>
                      </Button>
       
                   </children>
+            <padding>
+               <Insets top="4.0" />
+            </padding>
                </HBox>
-                <Button fx:id="manageCategoriesButton" onAction="#manageCategoriesButton" opacity="0.5" text="Управление категориями" translateX="321.0" translateY="-12.0" />
+                <Button fx:id="manageCategoriesButton" onAction="#manageCategoriesButton" opacity="0.5" text="Управление категориями" translateX="321.0" translateY="-12.0">
+            <VBox.margin>
+               <Insets />
+            </VBox.margin></Button>
          <HBox alignment="CENTER">
             <children>
                 <Label fx:id="periodLabel" alignment="CENTER" contentDisplay="CENTER" opacity="0.8" style="-fx-font-size: 12px;" text="Text" />

@@ -31,6 +31,7 @@ public class MainApplication extends Application {
     public static void setRoot(String fxml, String title) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(MainApplication.class.getResource("/styles.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setTitle(title); // Устанавливаем заголовок окна
     }
